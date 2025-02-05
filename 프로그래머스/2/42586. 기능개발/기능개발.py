@@ -1,37 +1,22 @@
-from collections import deque
+import math
 
 def solution(progresses, speeds):
-    answer = []
-    q = deque()
+    # 각 기능이 며칠 후에 100%가 되는지 계산
+    days = [math.ceil((100 - p) / s) for p, s in zip(progresses, speeds)]
     
-    progresses = [(k, v) for k, v in zip(progresses, speeds)]
+    stack = []  # 각 원소: [배포기준일, 기능수]
+    for d in days:
+        if not stack:
+            # 스택이 비었다면 새 배포 그룹 시작
+            stack.append([d, 1])
+        else:
+            # 스택 top 확인
+            if d <= stack[-1][0]:
+                # top의 기준일 이하이면 같은 그룹에 포함
+                stack[-1][1] += 1
+            else:
+                # 더 오래 걸리므로 새로운 배포 그룹으로 시작
+                stack.append([d, 1])
     
-    n = 0
-    
-    while not all(map(lambda x: x[0]>=100, progresses)):
-        q.clear()
-        for idx, (cur_progress, speed) in enumerate(progresses):
-            
-            # 공정률 업데이트
-            if cur_progress < 100 : 
-                q.append((cur_progress + speed, speed))
-            
-            else : 
-                # 현상유지
-                q.append((cur_progress, speed))
-        
-        cnt = 0
-        print(q)
-        while len(q) and q[0][0] >= 100 : 
-            q.popleft()
-            cnt += 1
-        
-        if cnt :
-            answer.append(cnt)
-        
-        # if n == 20:
-        #     break
-        n+=1
-        progresses = list(q)[::]
-        
-    return answer
+    # 스택에 쌓인 각 그룹의 기능수를 순서대로 꺼내서 결과 반환
+    return [group[1] for group in stack]
