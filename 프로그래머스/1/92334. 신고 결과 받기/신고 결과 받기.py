@@ -3,7 +3,7 @@ def solution(id_list, report, k):
     reported_user = {}
     count = {}
     
-    for r in set(report):
+    for r in report:
         user_id, reported_id = r.split()
         if reported_id not in reported_user :
             reported_user[reported_id] = set()
