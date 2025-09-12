@@ -1,13 +1,8 @@
-# permutations import
-from itertools import permutations
-
 def solution(numbers):
-    
-    
-    sum = []
-    temp = list(permutations(numbers, 2))
-    for i in temp : 
-        sum.append(i[0] + i[1])
-    
-    answer = sorted(set(sum))
-    return answer
+    answer = set()
+    for idx1, num1 in enumerate(numbers):
+        for idx2, num2 in enumerate(numbers):
+            if idx1 == idx2 : 
+                continue
+            answer.add(num1+num2)
+    return sorted(list(answer))
